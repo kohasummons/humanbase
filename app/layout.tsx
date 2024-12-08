@@ -6,7 +6,7 @@ import "./globals.css";
 const ppNeueMontreal = localFont({
   src: [
     {
-      path: "./fonts/ppneuemontreal-Medium.otf",
+      path: "./fonts/ppneuemontreal-medium.otf",
       weight: "500",
     },
     {
