@@ -11,6 +11,13 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "mute-gray": "#E8E8E8",
+        "light-gray": "#666666",
+        "shock-orange": "#F03603"
+      },
+      fontFamily: {
+        "pp-neue-montreal": ["var(--font-pp-neue-montreal)", "sans"],
+        "pp-supply-sans": ["var(--font-pp-supply-sans)", "sans"],
       },
     },
   },
