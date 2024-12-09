@@ -1,30 +1,8 @@
 import React from "react";
+import { formatEther } from 'viem';
 
-const invoiceInfo = [
-  {
-    invoiceId: "#Graw-001",
-    dateIssued: "5 / 10 / 1034",
-    name: "Joshua Omobola",
-    amount: "1 ETH",
-    status: "Paid",
-  },
-  {
-    invoiceId: "#Graw-001",
-    dateIssued: "5 / 10 / 1034",
-    name: "Joshua Omobola",
-    amount: "1 ETH",
-    status: "Pending",
-  },
-  {
-    invoiceId: "#Graw-001",
-    dateIssued: "5 / 10 / 1034",
-    name: "Joshua Omobola",
-    amount: "1 ETH",
-    status: "Overdue",
-  },
-];
+const InvoiceData = ({invoices}: {invoices: any[]}) => {
 
-const InvoiceData = () => {
   return (
     <div className="container">
       <div className="border px-8 py-4 flex flex-col w-[668px] h-[479px]">
@@ -49,19 +27,19 @@ const InvoiceData = () => {
             </tr>
           </thead>
           <tbody>
-            {invoiceInfo.map((invoice, index) => (
-              <tr key={index} className="border-b">
-                <td className="py-2 px-4 font-pp-neue-montreal font-light text-[13px]">
-                  {invoice?.invoiceId}
+            {invoices.map((invoice, index) => (
+              <tr key={index} className="border border-t-0 transition-colors hover:bg-[#f3f3f3] cursor-pointer">
+                <td className="py-2 px-4 font-pp-neue-montreal font-normal text-[13px]">
+                  {invoice?.id.slice(0, 6)}...{invoice?.id.slice(-4)}
                 </td>
                 <td className="py-2 px-4 font-pp-neue-montreal font-light text-[13px]">
-                  {invoice?.dateIssued}
+                  {invoice?.date === "Invalid Date" ? "♾️" : invoice?.date}
                 </td>
                 <td className="py-2 px-4 font-pp-neue-montreal font-light text-[13px]">
-                  {invoice?.name}
+                  {invoice?.buyerInfo?.name || invoice?.sellerInfo?.name || `Client ${index + 1}`}
                 </td>
                 <td className="py-2 px-4 font-pp-neue-montreal font-light text-[13px]">
-                  {invoice?.amount}
+                  {formatEther(invoice?.amount)} ETH
                 </td>
                 <td className="py-2 px-4">
                   <span
@@ -78,6 +56,25 @@ const InvoiceData = () => {
                 </td>
               </tr>
             ))}
+            {invoices.length === 0 && (
+              <tr className="border border-t-0">
+                <td className="py-2 px-4 font-pp-neue-montreal font-light text-[13px]">
+                  <div className="h-3 w-12 animate-pulse bg-gray-300"></div>
+                </td>
+                <td className="py-2 px-4 font-pp-neue-montreal font-light text-[13px]">
+                  <div className="h-4 w-12 animate-pulse bg-gray-300"></div>
+                </td>
+                <td className="py-2 px-4 font-pp-neue-montreal font-light text-[13px]">
+                  <div className="h-4 w-16 animate-pulse bg-gray-300"></div>
+                </td>
+                <td className="py-2 px-4 font-pp-neue-montreal font-light text-[13px]">
+                  <div className="h-4 w-4 animate-pulse bg-gray-300"></div>
+                </td>
+                <td className="py-2 px-4">
+                  <div className="h-4 w-6 animate-pulse bg-gray-300"></div>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

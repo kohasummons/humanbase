@@ -1,32 +1,62 @@
 "use client";
 
 import { WandSparkles } from "lucide-react";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import humanbaseLogo from "@/assets/humanbase_logo.svg";
 import { useChat } from 'ai/react';
 
-// import { getRequestsByWalletAddress } from '@/request';
+import { getRequestsByWalletAddress } from '@/request';
+import { useAppKitAccount } from "@reown/appkit/react";
 
 const ChatPage = () => {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
-  // useEffect(() => {
-  //   if (address) getInvoices();
-  // }, [getInvoices, address]);
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const { messages, input, handleInputChange, handleSubmit: originalHandleSubmit } = useChat();
+  const { address } = useAppKitAccount();
+
+  const getInvoices = useCallback(async () => {
+    const res = await getRequestsByWalletAddress(address);
+    setInvoices(res);
+  }, [address]);
+
+
+  useEffect(() => {
+    if (address) getInvoices();
+  }, [getInvoices, address]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const res = await getRequestsByWalletAddress(address);
+    const invoiceContext = {
+      totalInvoices: res.length,
+      pendingInvoices: res.filter((item) => item.balance?.balance === '0').length,
+      paidInvoices: res.filter((item) => item.balance?.balance === item.expectedAmount).length,
+      totalRevenue: res.filter((item) => item.payee?.value == address)
+        .reduce((total, item) => total + Number(item.expectedAmount), 0)
+    };
+
+    originalHandleSubmit(e, {
+      data: {
+        invoicesSummary: invoiceContext,
+        invoices: invoices
+      }
+    });
+  };
 
   return (
-    <div className="flex w-9/12 flex-col h-screen fixed">
-      <div className="w-full py-4">
+    <div className=" w-full flex flex-col h-screen overflow-y-scroll scrollbar-hide">
+      <div className="w-full py-4 fixed">
         <h3 className="font-pp-supply-sans text-2xl text-gray-800">Chat</h3>
       </div>
-      <div className="w-9/12 flex justify-end flex-1 flex-col pb-60">
-        <div className="flex flex-col gap-12">
+      <div className="w-[calc(100dvw-500px)] mx-auto flex justify-end flex-1 flex-col pb-60">
+        <div className="flex flex-col overflow-y-auto scrollbar-hide gap-12">
           {messages.map((m, index) => (
             <React.Fragment key={index}>
               {m.role === "user" ? (
-                <div className="ml-auto w-9/12">
+                <div className="ml-auto w-[600px]">
                   <p className="bg-[#F7F7F7] rounded-lg p-4 text-[#727272] text-xl font-pp-neue-montreal">
-                    {m.content}
+                    {m?.content}
                   </p>
                 </div>
               ) :(
@@ -38,7 +68,7 @@ const ChatPage = () => {
                     height={40}
                   />
                   <div className="bg-white pt-0 pb-2 rounded-lg text-xl text-[#727272] font-pp-neue-montreal">
-                    {m.content}
+                    {m?.content}
                   </div>
                 </div>
               )}
@@ -47,7 +77,7 @@ const ChatPage = () => {
         </div>
       </div>
       <div
-        className="w-9/12 justify-start items-start fixed bottom-0 py-4 pb-12 gap-4"
+        className="w-11/12 justify-start items-start fixed bottom-0 py-4 pb-12 gap-4"
         style={{ zIndex: 50 }}
       >
         <div className="w-10/12">
@@ -67,7 +97,7 @@ const ChatPage = () => {
             </button>
           </div>
         </div>
-        <div className="text-[13px] flex mr-28 justify-center font-pp-supply-sans font-extralight transition-colors text-center mt-2">
+        <div className="text-[13px] flex justify-center font-pp-supply-sans font-extralight transition-colors text-center mt-2">
           Humanbase can make mistakes. Verify important info.
         </div>
       </div>

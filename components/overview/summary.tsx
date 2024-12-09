@@ -28,10 +28,10 @@ const Summary = () => {
           Summary
         </p>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         {summaryData.map((data, index) => (
-          <div key={index} className="border border-[#F7F7F7]  p-3">
-            <p className="text-sm transition-colors font-pp-neue-montreal font-light">
+          <div key={index} className="border transition-colors border-[#F7F7F7] cursor-pointer p-3 hover:bg-[#f3f3f3]">
+            <p className="text-sm transition-colors font-pp-neue-montreal font-normal">
               {data.summary}
             </p>
           </div>
