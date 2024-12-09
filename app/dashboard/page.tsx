@@ -5,6 +5,7 @@ import { Download, LoaderPinwheel } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { getRequestsByWalletAddress } from '@/request';
+import { formatEther } from "viem";
 
 export default function Dashboard() {
   const { address } = useAppKitAccount();
@@ -78,7 +79,7 @@ export default function Dashboard() {
       },
       {
         title: "Total Revenue",
-        value: totalRevenue,
+        value: Number(formatEther(BigInt(totalRevenue))),
       }
     ]);
   }, [address]);
