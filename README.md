@@ -1,6 +1,8 @@
 # Humanbase
 
-Humanbase gives your finacianl data superpowers. You can now ask questions about your invoices, statements and get answers in seconds.
+Humanbase gives your financial data superpowers. You can now ask questions about your invoices, statements and get answers in seconds.
+
+[Demo Video](https://youtu.be/MMEv7rX0bsE)
 
 ![Humanbase](./public/humanbase_banner.png)
 
